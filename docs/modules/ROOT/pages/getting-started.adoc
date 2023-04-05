@@ -1,0 +1,122 @@
+= Getting Started with the Hazelcast .NET Client
+// Add required variables
+:page-layout: tutorial
+:page-product: platform
+:page-categories: Get Started
+:page-lang: csharp
+:page-enterprise:
+:page-est-time: 15mins.
+:description: In this tutorial you will see how to connect a .NET client to Hazelcast and manipulate a map.
+
+{description}
+
+// Give some context about the use case for this tutorial. What will the reader learn?
+== Context
+
+A quick start to use Hazelcast with .NET Client.
+
+== Before you Begin
+
+Before starting this tutorial, make sure the following prerequisites are met:
+
+
+* .NET SDK 6.0 or above
+* Viridian account or Docker
+* An IDE
+
+== Step 1. Start Hazelcast
+
+First, run the latest Hazelcast instance with Docker.
+
+```
+docker run --name hazelcast -p 5701:5701 hazelcast/hazelcast
+```
+
+If you don’t have Docker or don’t want to use it, you can connect to https://docs.hazelcast.com/cloud/connect-to-cluster[Viridian].
+
+== Step 2. Create a .NET Application
+
+Next, in a folder run the command and create a new .NET console application.
+
+```
+dotnet new console -n HazelcastQuickStart --use-program-main
+```
+
+Then, go to the project folder and add a dependency to the Hazelcast.Net NuGet package.
+
+```
+cd HazelcastQuickStart
+dotnet add package Hazelcast.Net
+```
+
+Next, you need to provide a logger to the client in order to see its logs. In this example, we will use the console output for logs.
+
+```
+dotnet add package Microsoft.Extensions.Logging.Console
+```
+
+== Step 3. Using the Map
+
+Now, we can start to coding. Open the project with your IDE, and paste the code below.
+
+```
+using Hazelcast;
+using Microsoft.Extensions.Logging;
+
+namespace HazelcastQuickStart;
+
+class Program
+{
+    public static async Task Main(string[] args)
+    {
+        Console.WriteLine("Getting start Hazelcast with .Net Client");
+
+        var options = new HazelcastOptionsBuilder()
+            .With(args) // You can pass the args to configure the client.
+            .With("Logging:LogLevel:Hazelcast", LogLevel.Information.ToString())
+            .With((conf, opt) =>
+            {
+                // Configure the logger.
+                opt.LoggerFactory.Creator = () => LoggerFactory.Create(loggingBuilder =>
+                    loggingBuilder.AddConfiguration(conf.GetSection("logging")).AddSimpleConsole());
+
+                // Configure the cluster address.
+                opt.Networking.Addresses.Add("127.0.0.1:5701");
+            })
+            .Build();
+
+
+        // Create a client instance.
+        await using var client = await HazelcastClientFactory.StartNewClientAsync(options);
+
+        // Client is connected and ready.
+
+        // Create a map on the cluster.
+        await using var map = await client.GetMapAsync<int, string>("myMap");
+
+        // Now, you can put some data.
+        await map.PutAsync(1, "I'm distributed across the cluster.");
+
+        // Data is on cluster.
+
+        // Let's fetch it.
+        var myVal = await map.GetAsync(1);
+
+        Console.WriteLine($"Fetched value: {myVal}");
+    }
+}
+```
+
+Now, you can run the project.
+
+```
+dotnet run
+```
+
+== Summary
+
+In this tutorial, we run the Hazelcast and put data thorugh a distributed map. You can visit https://github.com/hazelcast/hazelcast-csharp-client/tree/master/src/Hazelcast.Net.Examples[GitHub page of .NET Client] for more examples.
+
+== See Also
+
+https://github.com/hazelcast/hazelcast-csharp-client
