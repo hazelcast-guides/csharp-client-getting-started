@@ -6,20 +6,21 @@
 :page-lang: csharp
 :page-enterprise:
 :page-est-time: 15mins.
-:description: In this tutorial you will see how to use the .NET Client to connect Hazelcast.
+:description: In this tutorial you will see how to connect a .NET client to Hazelcast and manipulate a map.
 
 {description}
 
 // Give some context about the use case for this tutorial. What will the reader learn?
 == Context
-A quick start to use Hazelcast with .Net Client.
+
+A quick start to use Hazelcast with .NET Client.
 
 == Before you Begin
 
-Before starting this tutorial, make sure that you meet the following prerequisites:
+Before starting this tutorial, make sure the following prerequisites are met:
 
 
-* .Net SDK 6.0 or above
+* .NET SDK 6.0 or above
 * Viridian account or Docker
 * An IDE
 
@@ -31,9 +32,9 @@ First, run the latest Hazelcast instance with Docker.
 docker run --name hazelcast -p 5701:5701 hazelcast/hazelcast
 ```
 
-If you don’t have Docker or don’t want to use it, you can connect to Viridian.
+If you don’t have Docker or don’t want to use it, you can connect to https://docs.hazelcast.com/cloud/connect-to-cluster[Viridian].
 
-== Step 2. Create an .Net Application
+== Step 2. Create a .NET Application
 
 Next, in a folder run the command and create a new .NET console application.
 
@@ -41,7 +42,7 @@ Next, in a folder run the command and create a new .NET console application.
 dotnet new console -n HazelcastQuickStart --use-program-main
 ```
 
-Then, go to project folder and add a dependency to the Hazelcast.Net NuGet package.
+Then, go to the project folder and add a dependency to the Hazelcast.Net NuGet package.
 
 ```
 cd HazelcastQuickStart
@@ -55,7 +56,8 @@ dotnet add package Microsoft.Extensions.Logging.Console
 ```
 
 == Step 3. Using the Map
-Now, we can start to coding. Open the project with you IDE, and paste the code below.
+
+Now, we can start to coding. Open the project with your IDE, and paste the code below.
 
 ```
 using Hazelcast;
@@ -113,7 +115,7 @@ dotnet run
 
 == Summary
 
-In this tutorial, we run the Hazelacast and put data thorugh a distributed map. You can visit GitHub page of .Net Client for more examples.
+In this tutorial, we run the Hazelcast and put data thorugh a distributed map. You can visit https://github.com/hazelcast/hazelcast-csharp-client/tree/master/src/Hazelcast.Net.Examples[GitHub page of .NET Client] for more examples.
 
 == See Also
 
