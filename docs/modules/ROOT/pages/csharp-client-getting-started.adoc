@@ -36,7 +36,7 @@ To understand and use the client, review the https://hazelcast.github.io/hazelca
 
 == Understanding the .NET Client
 
-The following section creates and starts a Hazelcast client with default configuration, before shutting it down at the end.
+The following section creates and starts a Hazelcast client with default configuration, before shutting it down when the Program exits.
 
 [source,java]
 ----
