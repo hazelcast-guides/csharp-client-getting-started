@@ -38,7 +38,7 @@ To understand and use the client, review the https://hazelcast.github.io/hazelca
 
 The following section creates and starts a Hazelcast client with default configuration, before shutting it down when the Program exits.
 
-[source,java]
+[source,cs]
 ----
 using Hazelcast;
 
@@ -69,7 +69,7 @@ A Hazelcast SQL is a Calcite and ANSI SQL based interface to allow you to intera
 
 In the following example, we will create a map and insert into it, entries where the keys are ids and the values are defined as an object representing a city.
 
-[source,java]
+[source,cs]
 ----
 using Hazelcast;
 using Hazelcast.Serialization.Compact;
@@ -234,7 +234,7 @@ A Hazelcast Map is a distributed key-value store, similar to C# dictionary. You 
 
 In the following example, we will work with map entries where the keys are ids and the values are defined as an object representing a city.
 
-[source,java]
+[source,cs]
 ----
 using Hazelcast;
 
@@ -272,7 +272,7 @@ namespace Client
 
 Following line returns a map proxy object for the `cities` map:
 
-[source,java]
+[source,cs]
 ----
             // Create a map on the cluster
             await using var citiesMap = await client.GetMapAsync<int, string>("cities");
@@ -282,7 +282,7 @@ If `cities` doesn't exist, it will be automatically created. All the clients con
 
 With these lines, client adds data to the `cities` map. The first parameter is the key of the entry, the second one is the value.
 
-[source, csharp]
+[source,cs]
 ----
             // Add some data
             await citiesMap.PutAsync(1, "London");
@@ -292,7 +292,7 @@ With these lines, client adds data to the `cities` map. The first parameter is t
 
 Then, we get the data using the `GetEntriesAsync()` method and iterate over the results.
 
-[source,java]
+[source,cs]
 ----
             // Output the data
             var entries = citiesMap.GetEntriesAsync();
