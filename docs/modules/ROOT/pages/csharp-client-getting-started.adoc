@@ -5,15 +5,12 @@
 :page-categories: Get Started
 :page-lang: csharp
 :page-enterprise:
-:page-est-time: 15mins.
-:description: In this tutorial you will see how to connect a .NET client to Hazelcast and manipulate a map.
+:page-est-time: 5-10 mins
+:description: In this tutorial you will see how to connect with the Hazelcast .NET client and manipulate a map.
+
+== What You'll Learn
 
 {description}
-
-// Give some context about the use case for this tutorial. What will the reader learn?
-== Context
-
-A quick start to use Hazelcast with .NET Client.
 
 == Before you Begin
 
@@ -21,102 +18,145 @@ Before starting this tutorial, make sure the following prerequisites are met:
 
 
 * .NET SDK 6.0 or above
-* Viridian account or Docker
+* https://hazelcast.com/products/viridian/[Hazelcast Viridian Cloud Account]
 * An IDE
 
-== Step 1. Start Hazelcast
+== Start a Hazelcast Viridian Cloud Cluster
 
-First, run the latest Hazelcast instance with Docker.
+1. Sign up for a Hazelcast Viridian Cloud account (Free accounts are available).
+2. Log in to your Hazelcast Viridian Cloud account and navigate to your https://viridian.hazelcast.com[cluster list].
+3. Create a new cluster or start an existing one.
 
-```
-docker run --name hazelcast -p 5701:5701 hazelcast/hazelcast
-```
+== Setup a Hazelcast Client
 
-If you don’t have Docker or don’t want to use it, you can connect to https://docs.hazelcast.com/cloud/connect-to-cluster[Viridian].
+1. Use the quick connection guide to download the preconfigured .NET sample client.
+2. Follow the instructions on the quick connection guide to start using your cluster.
 
-== Step 2. Create a .NET Application
+To understand and use the client, review the https://hazelcast.github.io/hazelcast-csharp-client/versions.html[.NET API documentation] to better understand what is possible.
 
-Next, in a folder run the command and create a new .NET console application.
+== Understanding the .NET Client
 
-```
-dotnet new console -n HazelcastQuickStart --use-program-main
-```
+The following section creates and starts a Hazelcast client with default configuration, before shutting it down at the end.
 
-Then, go to the project folder and add a dependency to the Hazelcast.Net NuGet package.
-
-```
-cd HazelcastQuickStart
-dotnet add package Hazelcast.Net
-```
-
-Next, you need to provide a logger to the client in order to see its logs. In this example, we will use the console output for logs.
-
-```
-dotnet add package Microsoft.Extensions.Logging.Console
-```
-
-== Step 3. Using the Map
-
-Now, we can start to coding. Open the project with your IDE, and paste the code below.
-
-```
+[source,csharp]
+----
 using Hazelcast;
-using Microsoft.Extensions.Logging;
 
-namespace HazelcastQuickStart;
-
-class Program
+namespace Client
 {
-    public static async Task Main(string[] args)
+    internal static class Program
     {
-        Console.WriteLine("Getting start Hazelcast with .Net Client");
+        public static async Task Main(string[] args)
+        {
+            // Create a client connection            
+            var options = new HazelcastOptionsBuilder()
+                .With(args) // Pass command line args to the client
+                .Build();
 
-        var options = new HazelcastOptionsBuilder()
-            .With(args) // You can pass the args to configure the client.
-            .With("Logging:LogLevel:Hazelcast", LogLevel.Information.ToString())
-            .With((conf, opt) =>
-            {
-                // Configure the logger.
-                opt.LoggerFactory.Creator = () => LoggerFactory.Create(loggingBuilder =>
-                    loggingBuilder.AddConfiguration(conf.GetSection("logging")).AddSimpleConsole());
+            await using var client = await HazelcastClientFactory.StartNewClientAsync(options);
 
-                // Configure the cluster address.
-                opt.Networking.Addresses.Add("127.0.0.1:5701");
-            })
-            .Build();
-
-
-        // Create a client instance.
-        await using var client = await HazelcastClientFactory.StartNewClientAsync(options);
-
-        // Client is connected and ready.
-
-        // Create a map on the cluster.
-        await using var map = await client.GetMapAsync<int, string>("myMap");
-
-        // Now, you can put some data.
-        await map.PutAsync(1, "I'm distributed across the cluster.");
-
-        // Data is on cluster.
-
-        // Let's fetch it.
-        var myVal = await map.GetAsync(1);
-
-        Console.WriteLine($"Fetched value: {myVal}");
-    }
+            // take actions
+        }
 }
-```
+----
 
-Now, you can run the project.
+== Understanding the Hazelcast Map
 
-```
-dotnet run
-```
+A Hazelcast Map is a distributed key-value store, similar to C# dictionary. You can store key-value pairs in a Hazelcast Map.
+
+In the following example, we will work with map entries where the keys are ids and the values are defined as an object representing a city.
+
+[source,csharp]
+----
+using Hazelcast;
+
+namespace Client
+{
+    internal static class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            // Create a client connection
+            var options = new HazelcastOptionsBuilder()
+                .With(args) // Pass command line args to the client
+                .Build();
+
+            await using var client = await HazelcastClientFactory.StartNewClientAsync(options);
+
+            // Create a map on the cluster
+            await using var citiesMap = await client.GetMapAsync<int, string>("cities");
+
+            // Add some data
+            await citiesMap.PutAsync(1, "London");
+            await citiesMap.PutAsync(2, "New York");
+            await citiesMap.PutAsync(3, "Tokyo");
+
+            // Output the data
+            var entries = citiesMap.GetEntriesAsync();
+
+            foreach (var entry in entries.Result)
+            {
+                Console.WriteLine($"{entry.Key} -> {entry.Value}");
+            }
+        }
+}
+----
+
+Following line returns a map proxy object for the `cities` map:
+
+[source, csharp]
+----
+            // Create a map on the cluster
+            await using var citiesMap = await client.GetMapAsync<int, string>("cities");
+----
+
+If `cities` doesn't exist, it will be automatically created. All the clients connected to the same cluster will have access to the same map.
+
+With these lines, client adds data to the `cities` map. The first parameter is the key of the entry, the second one is the value.
+
+[source, csharp]
+----
+            // Add some data
+            await citiesMap.PutAsync(1, "London");
+            await citiesMap.PutAsync(2, "New York");
+            await citiesMap.PutAsync(3, "Tokyo");
+----
+
+Then, we get the data using the `GetEntriesAsync()` method and iterate over the results.
+
+[source, python]
+----
+            // Output the data
+            var entries = citiesMap.GetEntriesAsync();
+
+            foreach (var entry in entries.Result)
+            {
+                Console.WriteLine($"{entry.Key} -> {entry.Value}");
+            }
+----
+
+The output of this code is given below:
+
+[source,bash]
+----
+2 -> New York
+1 -> London
+3 -> Tokyo
+----
+
+NOTE: Ordering of the keys is NOT enforced and results may NOT correspond to entry order.
+
 
 == Summary
 
-In this tutorial, we run the Hazelcast and put data thorugh a distributed map. You can visit https://github.com/hazelcast/hazelcast-csharp-client/tree/master/src/Hazelcast.Net.Examples[GitHub page of .NET Client] for more examples.
+In this tutorial, you learned how to get started with the Hazelcast .NET Client and put data into a distributed map. 
 
 == See Also
 
-https://github.com/hazelcast/hazelcast-csharp-client
+There are a lot of things that you can do with the .NET Client. For more, such as how you can query a map with predicates and SQL,
+check out our https://github.com/hazelcast/hazelcast-csharp-client[.NET Client repository] and our https://hazelcast.github.io/hazelcast-csharp-client/versions.html[.NET API documentation] to better understand what is possible.
+
+If you have any questions, suggestions, or feedback please do not hesitate to reach out to us via https://slack.hazelcast.com/[Hazelcast Community Slack].
+Also, please take a look at https://github.com/hazelcast/hazelcast-csharp-client/issues[the issue list] if you would like to contribute to the client.
+
+
