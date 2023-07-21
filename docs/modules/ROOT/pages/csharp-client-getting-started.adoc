@@ -53,22 +53,21 @@ namespace Client
         {
             // Create a client connection            
             var options = new HazelcastOptionsBuilder()
-                .With(args) // Pass command line args to the client
                 .With(config =>
                 {
                     // Your Viridian cluster name.
-                    config.ClusterName = "CLUSTER_NAME";
+                    config.ClusterName = "<CLUSTER_NAME>";
+
                     // Your discovery token to connect Viridian cluster.
-                    config.Networking.Cloud.DiscoveryToken = "YOUR_DISCOVERY_TOKEN";
-                    // Enable metrics to see on Management Center.
-                    config.Metrics.Enabled = true;
+                    config.Networking.Cloud.DiscoveryToken = "<YOUR_DISCOVERY_TOKEN>";
+
                     // Configure SSL.
                     config.Networking.Ssl.Enabled = true;
                     config.Networking.Ssl.ValidateCertificateChain = false;
-                    config.Networking.Ssl.CertificatePath = "PATH_TO_CLIENT.PFX";
-                    config.Networking.Ssl.CertificatePassword = "CERTIFICATE_PASSWORD";
+                    config.Networking.Ssl.CertificatePath = "<PATH_TO_CLIENT.PFX>";
+                    config.Networking.Ssl.CertificatePassword = "<CERTIFICATE_PASSWORD>";
                 })
-                .Build();
+                .With(args) // Pass command line args to the client
                 .Build();
 
             await using var client = await HazelcastClientFactory.StartNewClientAsync(options);
@@ -130,6 +129,18 @@ namespace Client
             var options = new HazelcastOptionsBuilder()
                 .With(config =>
                 {
+                    // Your Viridian cluster name.
+                    config.ClusterName = "<CLUSTER_NAME>";
+
+                    // Your discovery token to connect Viridian cluster.
+                    config.Networking.Cloud.DiscoveryToken = "<YOUR_DISCOVERY_TOKEN>";
+
+                    // Configure SSL.
+                    config.Networking.Ssl.Enabled = true;
+                    config.Networking.Ssl.ValidateCertificateChain = false;
+                    config.Networking.Ssl.CertificatePath = "<PATH_TO_CLIENT.PFX>";
+                    config.Networking.Ssl.CertificatePassword = "<CERTIFICATE_PASSWORD>";
+
                     // Register Compact serializer of City class.
                     config.Serialization.Compact.AddSerializer(new CitySerializer());
                 })
@@ -261,6 +272,20 @@ namespace Client
         {
             // Create a client connection
             var options = new HazelcastOptionsBuilder()
+                .With(config =>
+                {
+                    // Your Viridian cluster name.
+                    config.ClusterName = "<CLUSTER_NAME>";
+
+                    // Your discovery token to connect Viridian cluster.
+                    config.Networking.Cloud.DiscoveryToken = "<YOUR_DISCOVERY_TOKEN>";
+
+                    // Configure SSL.
+                    config.Networking.Ssl.Enabled = true;
+                    config.Networking.Ssl.ValidateCertificateChain = false;
+                    config.Networking.Ssl.CertificatePath = "<PATH_TO_CLIENT.PFX>";
+                    config.Networking.Ssl.CertificatePassword = "<CERTIFICATE_PASSWORD>";
+                })
                 .With(args) // Pass command line args to the client
                 .Build();
 
