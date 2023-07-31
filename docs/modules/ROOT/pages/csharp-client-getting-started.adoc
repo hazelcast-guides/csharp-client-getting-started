@@ -1,5 +1,4 @@
 = Getting Started with the Hazelcast .NET Client
-// Add required variables
 :page-layout: tutorial
 :page-product: platform
 :page-categories: Get Started
