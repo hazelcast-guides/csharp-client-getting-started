@@ -36,6 +36,20 @@ mkdir hazelcast-csharp-example
 cd hazelcast-csharp-example
 ----
 
+Create a new .NET Console project using the commandline tool:
+
+[source]
+----
+dotnet new console
+----
+
+Add the Hazelcast.NET Client as a dependency:
+
+[source]
+----
+dotnet add Hazelcast.Net
+----
+
 Extract the keystore files you downloaded from Viridian into this directory. The files you need for this tutorial are:
 
 [source,bash]
@@ -54,7 +68,6 @@ The following section creates and starts a Hazelcast client with default configu
 using Hazelcast;
 
 using System;
-using System.Threading.Tasks;
 
 namespace Client
 {
@@ -71,12 +84,10 @@ namespace Client
 
                     // Your discovery token to connect Viridian cluster.
                     config.Networking.Cloud.DiscoveryToken = "<YOUR_DISCOVERY_TOKEN>";
-                    config.Networking.Cloud.Url = new Uri("https://api.viridian.hazelcast.com");
 
                     // Configure SSL.
                     config.Networking.Ssl.Enabled = true;
                     config.Networking.Ssl.ValidateCertificateChain = false;
-                    config.Networking.Ssl.Protocol = SslProtocols.Tls12;
                     config.Networking.Ssl.CertificatePath = "client.pfx";
                     config.Networking.Ssl.CertificatePassword = "<YOUR_CERTIFICATE_PASSWORD>";
                 })
@@ -100,8 +111,6 @@ In the following example, we will create a map and insert into it, entries where
 ----
 using Hazelcast;
 using Hazelcast.Serialization.Compact;
-using System;
-using System.Threading.Tasks;
 
 namespace Client
 {
@@ -147,12 +156,10 @@ namespace Client
 
                     // Your discovery token to connect Viridian cluster.
                     config.Networking.Cloud.DiscoveryToken = "<YOUR_DISCOVERY_TOKEN>";
-                    config.Networking.Cloud.Url = new Uri("https://api.viridian.hazelcast.com");
 
                     // Configure SSL.
                     config.Networking.Ssl.Enabled = true;
                     config.Networking.Ssl.ValidateCertificateChain = false;
-                    config.Networking.Ssl.Protocol = SslProtocols.Tls12;
                     config.Networking.Ssl.CertificatePath = "client.pfx";
                     config.Networking.Ssl.CertificatePassword = "<YOUR_CERTIFICATE_PASSWORD>";
 
@@ -296,12 +303,10 @@ namespace Client
 
                     // Your discovery token to connect Viridian cluster.
                     config.Networking.Cloud.DiscoveryToken = "<YOUR_DISCOVERY_TOKEN>";
-                    config.Networking.Cloud.Url = new Uri("https://api.viridian.hazelcast.com");
 
                     // Configure SSL.
                     config.Networking.Ssl.Enabled = true;
                     config.Networking.Ssl.ValidateCertificateChain = false;
-                    config.Networking.Ssl.Protocol = SslProtocols.Tls12;
                     config.Networking.Ssl.CertificatePath = "client.pfx";
                     config.Networking.Ssl.CertificatePassword = "<YOUR_CERTIFICATE_PASSWORD>";
                 })
