@@ -114,7 +114,7 @@ namespace Client
 
     internal class CitySerializer : ICompactSerializer<CityDTO>
     {
-        public string TypeName => "city";
+        public string TypeName => "CityDTO";
 
         public CityDTO Read(ICompactReader reader)
         {
@@ -191,7 +191,7 @@ namespace Client
                                     OPTIONS (
                                         'keyFormat' = 'int',
                                         'valueFormat' = 'compact',
-                                        'valueCompactTypeName' = 'city')";
+                                        'valueCompactTypeName' = 'CityDTO')";
 
             await client.Sql.ExecuteCommandAsync(mappingCommand);
 
