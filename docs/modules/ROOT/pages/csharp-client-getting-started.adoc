@@ -61,7 +61,9 @@ To understand and use the client, review the https://hazelcast.github.io/hazelca
 
 == Understanding the .NET Client
 
-The following section creates and starts a Hazelcast client with default configuration, before shutting it down when the Program exits.
+The following section creates and starts a Hazelcast client with default configuration, connects to your Viridian cluster before shutting the client down at the end.
+
+Create a C# file named “Program.cs” and put the following code inside it:
 
 [source,cs]
 ----
